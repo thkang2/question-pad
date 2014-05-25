@@ -17,11 +17,14 @@
 </head>
 
 <body>
+    <div id="header_wrap" class="outer"><header class="inner">
     <ul>
         <li><button type="button" data-bind="click: newItem">추가</button></li>
         <li><button type="button" data-bind="click: toggleAll">토글</button></li>
         <li><button type="button" data-bind="click: replaceAll">replace</button></li>
     </ul>
+</header></div>
+    <div id="main_content_wrap" class="outer"><section id="main_content" class="inner">
     <table>
         <thead>
             <tr>
@@ -52,7 +55,7 @@
             </tr>
         </tbody>
     </table>
-    <script type="text/javascript">
+    </section></div>    <script type="text/javascript">
         var viewModel = function () {
             var self=this;
             this.questions = ko.observableArray([]);
