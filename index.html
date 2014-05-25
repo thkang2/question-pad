@@ -1,0 +1,98 @@
+<!doctype HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/knockout/3.1.0/knockout-min.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="https://rawgit.com/mono0x/jquery.keybind/master/jquery.keybind.js"></script>
+
+    <style>
+        .questions {
+            width: 250px; }
+        .answers {
+            width: 500px; }
+    </style>
+</head>
+
+<body>
+    <ul>
+        <li><button type="button" data-bind="click: newItem">추가</button></li>
+        <li><button type="button" data-bind="click: toggleAll">토글</button></li>
+        <li><button type="button" data-bind="click: replaceAll">replace</button></li>
+    </ul>
+    <table>
+        <thead>
+            <tr>
+            <td>문제 </td>
+            <td>답 </td>
+            <td>토글 </td>
+            <td>삭제 </td>
+
+            </tr>
+        </thead>
+        <tbody data-bind="foreach: questions">
+            <tr>
+                <td>
+
+                    <input class="questions" type="text" placeholder="문제" data-bind="value: $data.q">
+
+                </td><td>
+                <!-- ko if: $data.visible -->
+                    <input class="answers" type="text" placeholder="답" data-bind="value: $data.a">
+
+                <!-- /ko -->
+                </td>
+                <td>
+                    <button type="button" data-bind="click: $data.toggle">토글</button>
+                </td><td>
+                    <button type="button" data-bind="click: function () { $root.removeItem($index); }">삭제</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <script type="text/javascript">
+        var viewModel = function () {
+            var self=this;
+            this.questions = ko.observableArray([]);
+            this.newItem = function () {
+                var model = {
+                    q: ko.observable(''),
+                    a: ko.observable(''),
+                    visible: ko.observable(true) }
+
+                var toggle = function () {
+                 model.visible(!model.visible());
+                }
+                model.toggle=toggle;
+                self.questions.push(model);
+                setTimeout(function () {
+                    $('.questions').last().focus();
+                }, 10);
+            }
+            this.removeItem = function(i) {
+                self.questions.splice(i, 1);
+            }
+            this.state = true;
+            this.toggleAll = function () {
+                var state = !self.state;
+                ko.utils.arrayForEach(self.questions(), function (i) {
+                        i.visible(state);
+                        });
+                self.state = state;
+            }
+            $(window).keybind('keydown', {
+                'S-s': self. newItem });
+            this.replaceAll = function () {
+                $('input[type="text"]').replaceWith(function () {
+                        return this.value;
+                        });
+            };
+        }
+        ko.applyBindings(new viewModel());
+
+    </script>
+
+
+</body>
+
+</html>
